@@ -969,7 +969,7 @@ static MsgInfo *news_parse_xover(const gchar *xover_str)
 	MsgInfo *msginfo;
 	gchar *subject, *sender, *size, *line, *date, *msgid, *ref, *tmp;
 	gchar *p;
-	gint num, size_int, line_int;
+	gint num, size_int;
 	gchar *xover_buf;
 
 	Xstrdup_a(xover_buf, xover_str, return NULL);
@@ -989,7 +989,7 @@ static MsgInfo *news_parse_xover(const gchar *xover_str)
 
 	num = atoi(xover_str);
 	size_int = atoi(size);
-	line_int = atoi(line);
+	//line_int = atoi(line);
 
 	/* set MsgInfo */
 	msginfo = g_new0(MsgInfo, 1);

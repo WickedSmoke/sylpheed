@@ -1041,7 +1041,6 @@ static GSList *imap_get_msg_list_full(Folder *folder, FolderItem *item,
 		GArray *uids;
 		GHashTable *msg_table;
 		GHashTable *flags_table;
-		guint32 cache_last;
 		guint32 begin = 0;
 		GSList *cur, *next = NULL;
 		MsgInfo *msginfo;
@@ -1051,7 +1050,7 @@ static GSList *imap_get_msg_list_full(Folder *folder, FolderItem *item,
 		/* get cache data */
 		mlist = procmsg_read_cache(item, FALSE);
 		procmsg_set_flags(mlist, item);
-		cache_last = procmsg_get_last_num_in_msg_list(mlist);
+		//cache_last = procmsg_get_last_num_in_msg_list(mlist);
 
 		/* get all UID list and flags */
 #if 0
@@ -2846,7 +2845,6 @@ static GSList *imap_get_uncached_messages(IMAPSession *session,
 {
 	IMAPGetData get_data = {item, exists, update_count, NULL};
 	gchar seq_set[22];
-	gint ok;
 
 	g_return_val_if_fail(session != NULL, NULL);
 	g_return_val_if_fail(item != NULL, NULL);
@@ -2865,11 +2863,11 @@ static GSList *imap_get_uncached_messages(IMAPSession *session,
 	}
 
 #if USE_THREADS
-	ok = imap_thread_run_progress(session, imap_get_uncached_messages_func,
+	imap_thread_run_progress(session, imap_get_uncached_messages_func,
 				      imap_get_uncached_messages_progress_func,
 				      &get_data);
 #else
-	ok = imap_get_uncached_messages_func(session, &get_data);
+	imap_get_uncached_messages_func(session, &get_data);
 #endif
 
 	progress_show(0, 0);
@@ -3403,7 +3401,7 @@ static MsgInfo *imap_parse_envelope(IMAPSession *session, FolderItem *item,
 	gchar buf[IMAPBUFSIZE];
 	MsgInfo *msginfo = NULL;
 	gchar *cur_pos;
-	gint msgnum;
+	//gint msgnum;
 	guint32 uid = 0;
 	size_t size = 0;
 	MsgFlags flags = {0, 0}, imap_flags = {0, 0};
@@ -3432,7 +3430,7 @@ static MsgInfo *imap_parse_envelope(IMAPSession *session, FolderItem *item,
 }
 
 	PARSE_ONE_ELEMENT(' ');
-	msgnum = atoi(buf);
+	//msgnum = atoi(buf);
 
 	PARSE_ONE_ELEMENT(' ');
 	g_return_val_if_fail(!strcmp(buf, "FETCH"), NULL);
@@ -3844,7 +3842,6 @@ static gint imap_cmd_auth_oauth2(IMAPSession *session, const gchar *user,
                                  const gchar *pass)
 {
 	PrefsAccount *account;
-	gchar *p;
 	gchar *response64;
 	gint ok;
 
@@ -4636,7 +4633,6 @@ static gint imap_cmd_ok(IMAPSession *session, GPtrArray *argbuf)
 
 static gint imap_cmd_gen_send(IMAPSession *session, const gchar *format, ...)
 {
-	IMAPRealSession *real = (IMAPRealSession *)session;
 	gchar buf[IMAPBUFSIZE];
 	gchar tmp[IMAPBUFSIZE];
 	gchar *p;
@@ -4647,7 +4643,7 @@ static gint imap_cmd_gen_send(IMAPSession *session, const gchar *format, ...)
 	va_end(args);
 
 #if USE_THREADS
-	if (real->is_running) {
+	if (((IMAPRealSession *)session)->is_running) {
 		g_warning("imap_cmd_gen_send: cannot send command because another command is already running.");
 		return IMAP_EAGAIN;
 	}

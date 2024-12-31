@@ -216,8 +216,6 @@ gint pop3_getauth_auth_recv(Pop3Session *session, const gchar *msg)
 
 gint pop3_getauth_auth_data_send(Pop3Session *session)
 {
-	gchar *p;
-	gchar *response;
 	gchar *response64;
 	PrefsAccount *ac = session->ac_prefs;
 
