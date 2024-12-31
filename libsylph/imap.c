@@ -130,9 +130,6 @@ static gint imap_session_reconnect	(IMAPSession	*session);
 static void imap_session_destroy	(Session	*session);
 /* static void imap_session_destroy_all	(void); */
 
-static gint imap_search_flags		(IMAPSession	*session,
-					 GArray	       **uids,
-					 GHashTable    **flags_table);
 static gint imap_fetch_flags		(IMAPSession	*session,
 					 GArray	       **uids,
 					 GHashTable    **flags_table);
@@ -377,9 +374,6 @@ static gint imap_cmd_subscribe	(IMAPSession	*session,
 				 const gchar	*folder);
 static gint imap_cmd_envelope	(IMAPSession	*session,
 				 const gchar	*seq_set);
-static gint imap_cmd_search	(IMAPSession	*session,
-				 const gchar	*criteria,
-				 GArray        **result);
 static gint imap_cmd_fetch	(IMAPSession	*session,
 				 guint32	 uid,
 				 const gchar	*filename);
@@ -432,8 +426,6 @@ static GSList *imap_get_seq_set_from_msglist	(GSList		*msglist,
 						 gint		 limit);
 static gint imap_seq_set_get_count		(const gchar	*seq_set);
 static void imap_seq_set_free			(GSList		*seq_list);
-
-static GHashTable *imap_get_uid_table		(GArray		*array);
 
 static gboolean imap_rename_folder_func		(GNode		*node,
 						 gpointer	 data);
@@ -837,6 +829,30 @@ static void imap_session_destroy_all(void)
 
 #define THROW goto catch
 
+#if 0
+static gint imap_cmd_search	(IMAPSession	*session,
+				 const gchar	*criteria,
+				 GArray        **result);
+
+static GHashTable *imap_get_uid_table(GArray *array)
+{
+	GHashTable *table;
+	gint i;
+	guint32 uid;
+
+	g_return_val_if_fail(array != NULL, NULL);
+
+	table = g_hash_table_new(NULL, g_direct_equal);
+
+	for (i = 0; i < array->len; i++) {
+		uid = g_array_index(array, guint32, i);
+		g_hash_table_insert(table, GUINT_TO_POINTER(uid),
+				    GINT_TO_POINTER(i + 1));
+	}
+
+	return table;
+}
+
 static gint imap_search_flags(IMAPSession *session, GArray **uids,
 			      GHashTable **flags_table)
 {
@@ -898,6 +914,7 @@ static gint imap_search_flags(IMAPSession *session, GArray **uids,
 
 	return IMAP_SUCCESS;
 }
+#endif
 
 static gint imap_fetch_flags(IMAPSession *session, GArray **uids,
 			     GHashTable **flags_table)
@@ -4195,6 +4212,7 @@ static gint imap_cmd_subscribe(IMAPSession *session, const gchar *folder)
 
 #define THROW(err) { ok = err; goto catch; }
 
+#if 0
 static gint imap_cmd_search(IMAPSession *session, const gchar *criteria,
 			    GArray **result)
 {
@@ -4241,6 +4259,7 @@ catch:
 
 	return ok;
 }
+#endif
 
 typedef struct _IMAPCmdFetchData
 {
@@ -5086,25 +5105,6 @@ static void imap_seq_set_free(GSList *seq_list)
 {
 	slist_free_strings(seq_list);
 	g_slist_free(seq_list);
-}
-
-static GHashTable *imap_get_uid_table(GArray *array)
-{
-	GHashTable *table;
-	gint i;
-	guint32 uid;
-
-	g_return_val_if_fail(array != NULL, NULL);
-
-	table = g_hash_table_new(NULL, g_direct_equal);
-
-	for (i = 0; i < array->len; i++) {
-		uid = g_array_index(array, guint32, i);
-		g_hash_table_insert(table, GUINT_TO_POINTER(uid),
-				    GINT_TO_POINTER(i + 1));
-	}
-
-	return table;
 }
 
 static gboolean imap_rename_folder_func(GNode *node, gpointer data)
