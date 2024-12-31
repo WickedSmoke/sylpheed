@@ -180,9 +180,9 @@ static void virtual_folder_init(Folder *folder, const gchar *name,
 guint sinfo_hash(gconstpointer key)
 {
 	const SearchCacheInfo *sinfo = key;
-	guint h;
+	uintptr_t h;
 
-	h = (guint)sinfo->folder;
+	h = (uintptr_t) sinfo->folder;
 	h ^= sinfo->msgnum;
 	h ^= (guint)sinfo->size;
 	h ^= (guint)sinfo->mtime;
@@ -369,7 +369,7 @@ static GSList *virtual_search_folder(VirtualSearchInfo *info, FolderItem *item)
 		++count;
 
 		if (info->search_cache_table) {
-			gint matched;
+			intptr_t matched;
 			SearchCacheInfo sinfo;
 
 			sinfo.folder = item;
@@ -378,7 +378,7 @@ static GSList *virtual_search_folder(VirtualSearchInfo *info, FolderItem *item)
 			sinfo.mtime = msginfo->mtime;
 			sinfo.flags = msginfo->flags;
 
-			matched = (gint)g_hash_table_lookup
+			matched = (intptr_t) g_hash_table_lookup
 				(info->search_cache_table, &sinfo);
 			if (matched == SCACHE_MATCHED) {
 				match_list = g_slist_prepend
