@@ -1008,7 +1008,7 @@ static gboolean session_read_data_as_file_cb(SockInfo *source,
 
 		if (buf_data_len <= PREREAD_SIZE) {
 			if (data_begin_p > session->read_buf) {
-				g_memmove(session->read_buf, data_begin_p,
+				memmove(session->read_buf, data_begin_p,
 					  buf_data_len);
 				data_begin_p = session->read_buf;
 				session->read_buf_p = session->read_buf +
@@ -1039,7 +1039,7 @@ static gboolean session_read_data_as_file_cb(SockInfo *source,
 		}
 		session->read_data_pos += write_len;
 
-		g_memmove(session->read_buf, data_begin_p + write_len,
+		memmove(session->read_buf, data_begin_p + write_len,
 			  PREREAD_SIZE);
 		session->read_buf_p = session->read_buf + PREREAD_SIZE;
 		session->preread_len = PREREAD_SIZE;

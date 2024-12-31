@@ -2598,7 +2598,7 @@ static gint imap_rename_folder_real(Folder *folder, FolderItem *item,
 		if (strchr(item->path, '/')) {
 			gchar *dirpath;
 
-			dirpath = g_dirname(item->path);
+			dirpath = g_path_get_dirname(item->path);
 			newpath = g_strconcat(dirpath, "/", name, NULL);
 			g_free(dirpath);
 		} else
@@ -5009,9 +5009,9 @@ static GSList *imap_get_seq_set_from_msglist(GSList *msglist, gint limit)
 			if (str->len > 0)
 				g_string_append_c(str, ',');
 			if (first == last)
-				g_string_sprintfa(str, "%u", first);
+				g_string_append_printf(str, "%u", first);
 			else
-				g_string_sprintfa(str, "%u:%u", first, last);
+				g_string_append_printf(str, "%u:%u", first, last);
 
 			first = next;
 
@@ -5026,9 +5026,9 @@ static GSList *imap_get_seq_set_from_msglist(GSList *msglist, gint limit)
 			if (str->len > 0)
 				g_string_append_c(str, ',');
 			if (first == last)
-				g_string_sprintfa(str, "%u", first);
+				g_string_append_printf(str, "%u", first);
 			else
-				g_string_sprintfa(str, "%u:%u", first, last);
+				g_string_append_printf(str, "%u:%u", first, last);
 
 			first = next;
 

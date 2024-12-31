@@ -622,7 +622,7 @@ static gboolean folder_get_status_full_all_func(GNode *node, gpointer data)
 
 	if (status->str) {
 		id = folder_item_get_identifier(item);
-		g_string_sprintfa(status->str, "%5d %5d %5d %s\n",
+		g_string_append_printf(status->str, "%5d %5d %5d %s\n",
 				  item->new, item->unread,
 				  item->total, id);
 		g_free(id);
@@ -681,7 +681,7 @@ gchar *folder_get_status(GPtrArray *folders, gboolean full)
 				gchar *id;
 
 				id = folder_item_get_identifier(item);
-				g_string_sprintfa(str, "%5d %5d %5d %s\n",
+				g_string_append_printf(str, "%5d %5d %5d %s\n",
 						  item->new, item->unread,
 						  item->total, id);
 				g_free(id);
@@ -693,9 +693,9 @@ gchar *folder_get_status(GPtrArray *folders, gboolean full)
 	}
 
 	if (full)
-		g_string_sprintfa(str, "%5d %5d %5d\n", new, unread, total);
+		g_string_append_printf(str, "%5d %5d %5d\n", new, unread, total);
 	else
-		g_string_sprintfa(str, "%d %d %d\n", new, unread, total);
+		g_string_append_printf(str, "%d %d %d\n", new, unread, total);
 
 	ret = str->str;
 	g_string_free(str, FALSE);

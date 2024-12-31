@@ -1330,7 +1330,7 @@ static gint mh_move_folder_real(Folder *folder, FolderItem *item,
 	} else {
 		name_ = g_filename_from_utf8(name, -1, NULL, NULL, NULL);
 		utf8_name = g_strdup(name);
-		dirname = g_dirname(oldpath);
+		dirname = g_path_get_dirname(oldpath);
 		newpath = g_strconcat(dirname, G_DIR_SEPARATOR_S,
 				      name_ ? name_ : name, NULL);
 		g_free(dirname);
@@ -1385,7 +1385,7 @@ static gint mh_move_folder_real(Folder *folder, FolderItem *item,
 			newpath = utf8_name;
 	} else {
 		if (strchr(item->path, '/') != NULL) {
-			dirname = g_dirname(item->path);
+			dirname = g_path_get_dirname(item->path);
 			newpath = g_strconcat(dirname, "/", utf8_name, NULL);
 			g_free(dirname);
 			g_free(utf8_name);
