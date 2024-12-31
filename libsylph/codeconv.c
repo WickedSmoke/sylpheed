@@ -35,6 +35,9 @@
 #endif
 
 #include <iconv.h>
+#ifndef ICONV_CONST
+#define ICONV_CONST
+#endif
 
 #include "codeconv.h"
 #include "prefs_common.h"

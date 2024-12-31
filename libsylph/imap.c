@@ -35,6 +35,9 @@
 #if HAVE_ICONV
 #  include <iconv.h>
 #endif
+#ifndef ICONV_CONST
+#define ICONV_CONST
+#endif
 
 #include "sylmain.h"
 #include "imap.h"
