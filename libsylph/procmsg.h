@@ -236,7 +236,7 @@ void	procmsg_mark_all_read		(FolderItem	*item);
 GSList *procmsg_sort_msg_list		(GSList		*mlist,
 					 FolderSortKey	 sort_key,
 					 FolderSortType	 sort_type);
-gint	procmsg_get_last_num_in_msg_list(GSList		*mlist);
+gint	procmsg_get_last_num_in_msg_list(const GSList		*mlist);
 void	procmsg_msg_list_free		(GSList		*mlist);
 
 void	procmsg_write_cache		(MsgInfo	*msginfo,

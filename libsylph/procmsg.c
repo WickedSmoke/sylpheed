@@ -542,14 +542,14 @@ GSList *procmsg_sort_msg_list(GSList *mlist, FolderSortKey sort_key,
 	return mlist;
 }
 
-gint procmsg_get_last_num_in_msg_list(GSList *mlist)
+gint procmsg_get_last_num_in_msg_list(const GSList *mlist)
 {
-	GSList *cur;
-	MsgInfo *msginfo;
+	const GSList *cur;
+	const MsgInfo *msginfo;
 	gint last = 0;
 
 	for (cur = mlist; cur != NULL; cur = cur->next) {
-		msginfo = (MsgInfo *)cur->data;
+		msginfo = (const MsgInfo *)cur->data;
 		if (msginfo && msginfo->msgnum > last)
 			last = msginfo->msgnum;
 	}
