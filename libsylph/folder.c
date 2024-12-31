@@ -1945,7 +1945,7 @@ static void folder_write_list_recursive(GNode *node, gpointer data)
 		}
 
 		fprintf(fp,
-			" mtime=\"%lld\" new=\"%d\" unread=\"%d\" total=\"%d\"",
+			" mtime=\"%" G_GINT64_FORMAT "\" new=\"%d\" unread=\"%d\" total=\"%d\"",
 			(gint64)item->mtime, item->new, item->unread, item->total);
 
 		if (item->account)
