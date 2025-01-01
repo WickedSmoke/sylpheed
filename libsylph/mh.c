@@ -515,8 +515,7 @@ static gint mh_add_msgs(Folder *folder, FolderItem *dest, GSList *file_list,
 			}
 		}
 
-		if (syl_app_get())
-			g_signal_emit_by_name(syl_app_get(), "add-msg", dest, destfile, dest->last_num + 1);
+		APP_EMITA("add-msg", dest, destfile, dest->last_num + 1);
 
 		g_free(destfile);
 		dest->last_num++;
@@ -629,8 +628,7 @@ static gint mh_add_msgs_msginfo(Folder *folder, FolderItem *dest,
 			}
 		}
 
-		if (syl_app_get())
-			g_signal_emit_by_name(syl_app_get(), "add-msg", dest, destfile, dest->last_num + 1);
+		APP_EMITA("add-msg", dest, destfile, dest->last_num + 1);
 
 		g_free(srcfile);
 		g_free(destfile);
@@ -712,7 +710,7 @@ static gint mh_do_move_msgs(Folder *folder, FolderItem *dest, GSList *msglist)
 		if (!destfile) break;
 		srcfile = procmsg_get_message_file(msginfo);
 
-		/* g_signal_emit_by_name(syl_app_get(), "remove-msg", src, srcfile, msginfo->msgnum); */
+		/* APP_EMITA("remove-msg", src, srcfile, msginfo->msgnum); */
 
 		if (move_file(srcfile, destfile, FALSE) < 0) {
 			g_free(srcfile);
@@ -720,10 +718,8 @@ static gint mh_do_move_msgs(Folder *folder, FolderItem *dest, GSList *msglist)
 			break;
 		}
 
-		if (syl_app_get()) {
-			g_signal_emit_by_name(syl_app_get(), "add-msg", dest, destfile, dest->last_num + 1);
-			g_signal_emit_by_name(syl_app_get(), "remove-msg", src, srcfile, msginfo->msgnum);
-		}
+		APP_EMITA("add-msg", dest, destfile, dest->last_num + 1);
+		APP_EMITA("remove-msg", src, srcfile, msginfo->msgnum);
 
 		g_free(srcfile);
 		g_free(destfile);
@@ -839,8 +835,7 @@ static gint mh_copy_msgs(Folder *folder, FolderItem *dest, GSList *msglist)
 			break;
 		}
 
-		if (syl_app_get())
-			g_signal_emit_by_name(syl_app_get(), "add-msg", dest, destfile, dest->last_num + 1);
+		APP_EMITA("add-msg", dest, destfile, dest->last_num + 1);
 
 		g_free(srcfile);
 		g_free(destfile);
@@ -876,8 +871,7 @@ static gint mh_remove_msg(Folder *folder, FolderItem *item, MsgInfo *msginfo)
 	file = mh_fetch_msg(folder, item, msginfo->msgnum);
 	g_return_val_if_fail(file != NULL, -1);
 
-	if (syl_app_get())
-		g_signal_emit_by_name(syl_app_get(), "remove-msg", item, file, msginfo->msgnum);
+	APP_EMITA("remove-msg", item, file, msginfo->msgnum);
 
 	S_LOCK(mh);
 
@@ -915,8 +909,7 @@ static gint mh_remove_all_msg(Folder *folder, FolderItem *item)
 
 	path = folder_item_get_path(item);
 	g_return_val_if_fail(path != NULL, -1);
-	if (syl_app_get())
-		g_signal_emit_by_name(syl_app_get(), "remove-all-msg", item);
+	APP_EMITA("remove-all-msg", item);
 
 	S_LOCK(mh);
 
@@ -1407,9 +1400,7 @@ static gint mh_move_folder_real(Folder *folder, FolderItem *item,
 	g_free(paths[1]);
 
 	new_id = folder_item_get_identifier(item);
-	if (syl_app_get())
-		g_signal_emit_by_name(syl_app_get(), "move-folder", item,
-				      old_id, new_id);
+	APP_EMITA("move-folder", item, old_id, new_id);
 	g_free(new_id);
 	g_free(old_id);
 
@@ -1448,8 +1439,7 @@ static gint mh_remove_folder(Folder *folder, FolderItem *item)
 	}
 
 	g_free(path);
-	if (syl_app_get())
-		g_signal_emit_by_name(syl_app_get(), "remove-folder", item);
+	APP_EMITA("remove-folder", item);
 	folder_item_remove(item);
 
 	S_UNLOCK(mh);

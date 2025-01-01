@@ -592,8 +592,7 @@ void folder_write_list(void)
 	if (prefs_file_close(pfile) < 0)
 		g_warning("failed to write folder list.\n");
 
-	if (syl_app_get())
-		g_signal_emit_by_name(syl_app_get(), "folderlist-updated");
+	APP_EMIT("folderlist-updated");
 }
 
 struct TotalMsgStatus

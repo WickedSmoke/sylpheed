@@ -486,6 +486,5 @@ void account_updated(void)
 		address_table = NULL;
 	}
 
-	if (syl_app_get())
-		g_signal_emit_by_name(syl_app_get(), "account-updated");
+	APP_EMIT("account-updated");
 }

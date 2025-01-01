@@ -1462,8 +1462,7 @@ static gint imap_add_msgs(Folder *folder, FolderItem *dest, GSList *file_list,
 			return -1;
 		}
 
-		if (syl_app_get())
-			g_signal_emit_by_name(syl_app_get(), "add-msg", dest, fileinfo->file, new_uid);
+		APP_EMITA("add-msg", dest, fileinfo->file, new_uid);
 
 		if (!session->uidplus)
 			last_uid++;
@@ -1601,8 +1600,7 @@ static gint imap_do_copy_msgs(Folder *folder, FolderItem *dest, GSList *msglist,
 	for (cur = msglist; cur != NULL; cur = cur->next) {
 		msginfo = (MsgInfo *)cur->data;
 
-		if (syl_app_get())
-			g_signal_emit_by_name(syl_app_get(), "add-msg", dest, NULL, 0);
+		APP_EMITA("add-msg", dest, NULL, 0);
 
 		dest->total++;
 		if (MSG_IS_NEW(msginfo->flags))
@@ -1787,8 +1785,7 @@ static gint imap_remove_msgs(Folder *folder, FolderItem *item, GSList *msglist)
 		MsgInfo *msginfo = (MsgInfo *)cur->data;
 		guint32 uid = msginfo->msgnum;
 
-		if (syl_app_get())
-			g_signal_emit_by_name(syl_app_get(), "remove-msg", item, NULL, uid);
+		APP_EMITA("remove-msg", item, NULL, uid);
 
 		if (dir_exist)
 			remove_numbered_files(dir, uid, uid);
@@ -1841,8 +1838,7 @@ static gint imap_remove_all_msg(Folder *folder, FolderItem *item)
 		return ok;
 	}
 
-	if (syl_app_get())
-		g_signal_emit_by_name(syl_app_get(), "remove-all-msg", item);
+	APP_EMITA("remove-all-msg", item);
 
 	item->new = item->unread = item->total = 0;
 	item->updated = TRUE;
@@ -2668,9 +2664,7 @@ static gint imap_rename_folder_real(Folder *folder, FolderItem *item,
 	g_free(real_newpath);
 
 	new_id = folder_item_get_identifier(item);
-	if (syl_app_get())
-		g_signal_emit_by_name(syl_app_get(), "move-folder", item,
-				      old_id, new_id);
+	APP_EMITA("move-folder", item, old_id, new_id);
 	g_free(new_id);
 	g_free(old_id);
 
@@ -2727,8 +2721,7 @@ static gint imap_remove_folder(Folder *folder, FolderItem *item)
 		g_warning("can't remove directory '%s'\n", cache_dir);
 	g_free(cache_dir);
 
-	if (syl_app_get())
-		g_signal_emit_by_name(syl_app_get(), "remove-folder", item);
+	APP_EMITA("remove-folder", item);
 	folder_item_remove(item);
 
 	return 0;
