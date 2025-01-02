@@ -191,7 +191,7 @@ gint filter_action_exec(FilterRule *rule, MsgInfo *msginfo, const gchar *file,
 			debug_print("filter_action_exec(): mark as read\n");
 			if (msginfo->folder) {
 				if (MSG_IS_NEW(fltinfo->flags))
-					msginfo->folder->new--;
+					msginfo->folder->new_count--;
 				if (MSG_IS_UNREAD(fltinfo->flags))
 					msginfo->folder->unread--;
 			}

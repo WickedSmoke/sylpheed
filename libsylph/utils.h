@@ -259,8 +259,10 @@ gchar *strtailchomp	(gchar		*str,
 			 gchar		 tail_char);
 gchar *strcrchomp	(gchar		*str);
 
+#ifndef __cplusplus
 gchar *strcasestr	(const gchar	*haystack,
 			 const gchar	*needle);
+#endif
 gpointer my_memmem	(gconstpointer	 haystack,
 			 size_t		 haystacklen,
 			 gconstpointer	 needle,

@@ -271,7 +271,7 @@ void	procmsg_add_flags		(FolderItem	*item,
 					 MsgFlags	 flags);
 
 void	procmsg_get_mark_sum		(FolderItem	*item,
-					 gint		*new,
+					 gint		*new_count,
 					 gint		*unread,
 					 gint		*total,
 					 gint		*min,

@@ -241,7 +241,7 @@ FolderItem *folder_item_new(const gchar *name, const gchar *path)
 	item->name = g_strdup(name);
 	item->path = g_strdup(path);
 	item->mtime = 0;
-	item->new = 0;
+	item->new_count = 0;
 	item->unread = 0;
 	item->total = 0;
 	item->unmarked_num = 0;
@@ -294,7 +294,7 @@ FolderItem *folder_item_copy(FolderItem *item)
 	new_item->name = g_strdup(item->name);
 	new_item->path = g_strdup(item->path);
 	new_item->mtime = item->mtime;
-	new_item->new = item->new;
+	new_item->new_count = item->new_count;
 	new_item->unread = item->unread;
 	new_item->total = item->total;
 	new_item->unmarked_num = item->unmarked_num;
@@ -615,14 +615,14 @@ static gboolean folder_get_status_full_all_func(GNode *node, gpointer data)
 
 	if (!item->path) return FALSE;
 
-	status->new += item->new;
+	status->new += item->new_count;
 	status->unread += item->unread;
 	status->total += item->total;
 
 	if (status->str) {
 		id = folder_item_get_identifier(item);
 		g_string_append_printf(status->str, "%5d %5d %5d %s\n",
-				  item->new, item->unread,
+				  item->new_count, item->unread,
 				  item->total, id);
 		g_free(id);
 	}
@@ -672,7 +672,7 @@ gchar *folder_get_status(GPtrArray *folders, gboolean full)
 			FolderItem *item;
 
 			item = g_ptr_array_index(folders, i);
-			new += item->new;
+			new += item->new_count;
 			unread += item->unread;
 			total += item->total;
 
@@ -681,7 +681,7 @@ gchar *folder_get_status(GPtrArray *folders, gboolean full)
 
 				id = folder_item_get_identifier(item);
 				g_string_append_printf(str, "%5d %5d %5d %s\n",
-						  item->new, item->unread,
+						  item->new_count, item->unread,
 						  item->total, id);
 				g_free(id);
 			}
@@ -1730,7 +1730,7 @@ static gboolean folder_build_tree(GNode *node, gpointer data)
 	item = folder_item_new(name, path);
 	item->stype = stype;
 	item->mtime = mtime;
-	item->new = new;
+	item->new_count = new;
 	item->unread = unread;
 	item->total = total;
 	item->no_sub = no_sub;
@@ -1945,7 +1945,7 @@ static void folder_write_list_recursive(GNode *node, gpointer data)
 
 		fprintf(fp,
 			" mtime=\"%" G_GINT64_FORMAT "\" new=\"%d\" unread=\"%d\" total=\"%d\"",
-			(gint64)item->mtime, item->new, item->unread, item->total);
+			(gint64)item->mtime, item->new_count, item->unread, item->total);
 
 		if (item->account)
 			fprintf(fp, " account_id=\"%d\"",

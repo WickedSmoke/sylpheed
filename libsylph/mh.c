@@ -527,7 +527,7 @@ static gint mh_add_msgs(Folder *folder, FolderItem *dest, GSList *file_list,
 			/* resets new flags of existing messages on
 			   received mode */
 			if (dest->unmarked_num == 0)
-				dest->new = 0;
+				dest->new_count = 0;
 			dest->unmarked_num++;
 			procmsg_add_mark_queue(dest, dest->last_num, flags);
 		} else {
@@ -535,7 +535,7 @@ static gint mh_add_msgs(Folder *folder, FolderItem *dest, GSList *file_list,
 		}
 		procmsg_add_cache_queue(dest, dest->last_num, msginfo);
 		if (MSG_IS_NEW(flags))
-			dest->new++;
+			dest->new_count++;
 		if (MSG_IS_UNREAD(flags))
 			dest->unread++;
 	}
@@ -641,7 +641,7 @@ static gint mh_add_msgs_msginfo(Folder *folder, FolderItem *dest,
 			/* resets new flags of existing messages on
 			   received mode */
 			if (dest->unmarked_num == 0)
-				dest->new = 0;
+				dest->new_count = 0;
 			dest->unmarked_num++;
 			procmsg_add_mark_queue(dest, dest->last_num,
 					       msginfo->flags);
@@ -651,7 +651,7 @@ static gint mh_add_msgs_msginfo(Folder *folder, FolderItem *dest,
 		}
 		procmsg_add_cache_queue(dest, dest->last_num, msginfo);
 		if (MSG_IS_NEW(msginfo->flags))
-			dest->new++;
+			dest->new_count++;
 		if (MSG_IS_UNREAD(msginfo->flags))
 			dest->unread++;
 	}
@@ -735,8 +735,8 @@ static gint mh_do_move_msgs(Folder *folder, FolderItem *dest, GSList *msglist)
 		procmsg_add_cache_queue(dest, dest->last_num, msginfo);
 
 		if (MSG_IS_NEW(msginfo->flags)) {
-			src->new--;
-			dest->new++;
+			src->new_count--;
+			dest->new_count++;
 		}
 		if (MSG_IS_UNREAD(msginfo->flags)) {
 			src->unread--;
@@ -848,7 +848,7 @@ static gint mh_copy_msgs(Folder *folder, FolderItem *dest, GSList *msglist)
 		procmsg_add_cache_queue(dest, dest->last_num, msginfo);
 
 		if (MSG_IS_NEW(msginfo->flags))
-			dest->new++;
+			dest->new_count++;
 		if (MSG_IS_UNREAD(msginfo->flags))
 			dest->unread++;
 	}
@@ -887,7 +887,7 @@ static gint mh_remove_msg(Folder *folder, FolderItem *item, MsgInfo *msginfo)
 	item->updated = TRUE;
 	item->mtime = 0;
 	if (MSG_IS_NEW(msginfo->flags))
-		item->new--;
+		item->new_count--;
 	if (MSG_IS_UNREAD(msginfo->flags))
 		item->unread--;
 	MSG_SET_TMP_FLAGS(msginfo->flags, MSG_INVALID);
@@ -916,7 +916,7 @@ static gint mh_remove_all_msg(Folder *folder, FolderItem *item)
 	val = remove_all_numbered_files(path);
 	g_free(path);
 	if (val == 0) {
-		item->new = item->unread = item->total = 0;
+		item->new_count = item->unread = item->total = 0;
 		item->last_num = 0;
 		item->updated = TRUE;
 		item->mtime = 0;
@@ -1112,7 +1112,7 @@ static gint mh_scan_folder_full(Folder *folder, FolderItem *item,
 #endif
 
 	if (n_msg == 0)
-		item->new = item->unread = item->total = 0;
+		item->new_count = item->unread = item->total = 0;
 	else if (count_sum) {
 		gint new, unread, total, min, max_;
 
@@ -1125,7 +1125,7 @@ static gint mh_scan_folder_full(Folder *folder, FolderItem *item,
 		} else
 			item->unmarked_num = 0;
 
-		item->new = new;
+		item->new_count = new;
 		item->unread = unread;
 		item->total = n_msg;
 
@@ -1851,7 +1851,7 @@ static void mh_scan_tree_recursive(FolderItem *item)
 			new += n_msg - total;
 			unread += n_msg - total;
 		}
-		item->new = new;
+		item->new_count = new;
 		item->unread = unread;
 		item->total = n_msg;
 		item->updated = TRUE;

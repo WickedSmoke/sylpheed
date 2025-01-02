@@ -1025,7 +1025,7 @@ static GSList *imap_get_msg_list_full(Folder *folder, FolderItem *item,
 	g_return_val_if_fail(FOLDER_TYPE(folder) == F_IMAP, NULL);
 	g_return_val_if_fail(folder->account != NULL, NULL);
 
-	item->new = item->unread = item->total = 0;
+	item->new_count = item->unread = item->total = 0;
 
 	session = imap_session_get(folder);
 
@@ -1106,7 +1106,7 @@ static GSList *imap_get_msg_list_full(Folder *folder, FolderItem *item,
 				imap_delete_cached_message
 					(item, msginfo->msgnum);
 				if (MSG_IS_NEW(msginfo->flags))
-					item->new--;
+					item->new_count--;
 				if (MSG_IS_UNREAD(msginfo->flags))
 					item->unread--;
 				item->total--;
@@ -1126,7 +1126,7 @@ static GSList *imap_get_msg_list_full(Folder *folder, FolderItem *item,
 				}
 			} else {
 				if (MSG_IS_NEW(msginfo->flags)) {
-					item->new--;
+					item->new_count--;
 					item->mark_dirty = TRUE;
 				}
 				if (MSG_IS_UNREAD(msginfo->flags)) {
@@ -1604,7 +1604,7 @@ static gint imap_do_copy_msgs(Folder *folder, FolderItem *dest, GSList *msglist,
 
 		dest->total++;
 		if (MSG_IS_NEW(msginfo->flags))
-			dest->new++;
+			dest->new_count++;
 		if (MSG_IS_UNREAD(msginfo->flags))
 			dest->unread++;
 	}
@@ -1791,7 +1791,7 @@ static gint imap_remove_msgs(Folder *folder, FolderItem *item, GSList *msglist)
 			remove_numbered_files(dir, uid, uid);
 		item->total--;
 		if (MSG_IS_NEW(msginfo->flags))
-			item->new--;
+			item->new_count--;
 		if (MSG_IS_UNREAD(msginfo->flags))
 			item->unread--;
 		MSG_SET_TMP_FLAGS(msginfo->flags, MSG_INVALID);
@@ -1840,7 +1840,7 @@ static gint imap_remove_all_msg(Folder *folder, FolderItem *item)
 
 	APP_EMITA("remove-all-msg", item);
 
-	item->new = item->unread = item->total = 0;
+	item->new_count = item->unread = item->total = 0;
 	item->updated = TRUE;
 
 	dir = folder_item_get_path(item);
@@ -1905,7 +1905,7 @@ static gint imap_scan_folder(Folder *folder, FolderItem *item)
 			 &messages, &recent, &uid_next, &uid_validity, &unseen);
 	if (ok != IMAP_SUCCESS) return -1;
 
-	item->new = unseen > 0 ? recent : 0;
+	item->new_count = unseen > 0 ? recent : 0;
 	item->unread = unseen;
 	item->total = messages;
 	item->last_num = (messages > 0 && uid_next > 0) ? uid_next - 1 : 0;
@@ -2030,7 +2030,7 @@ static gint imap_scan_tree_recursive(IMAPSession *session, FolderItem *item,
 			old_item->no_sub = new_item->no_sub;
 			old_item->no_select = new_item->no_select;
 			if (old_item->no_select == TRUE)
-				old_item->new = old_item->unread =
+				old_item->new_count = old_item->unread =
 					old_item->total = 0;
 			if (old_item->no_sub == TRUE && node->children) {
 				debug_print("folder '%s' doesn't have "
@@ -2817,7 +2817,7 @@ static gint imap_get_uncached_messages_func(IMAPSession *session, gpointer data)
 		}
 		if (update_count) {
 			if (MSG_IS_NEW(msginfo->flags))
-				item->new++;
+				item->new_count++;
 			if (MSG_IS_UNREAD(msginfo->flags))
 				item->unread++;
 		}

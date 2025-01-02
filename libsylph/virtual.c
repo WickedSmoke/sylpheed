@@ -535,7 +535,7 @@ static GSList *virtual_get_msg_list(Folder *folder, FolderItem *item,
 		++total;
 	}
 
-	item->new = new;
+	item->new_count = new;
 	item->unread = unread;
 	item->total = total;
 	item->updated = TRUE;
