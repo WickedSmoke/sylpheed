@@ -220,6 +220,10 @@ struct _MsgEncryptInfo
 typedef FILE * (*DecryptMessageFunc)		(MsgInfo	*msginfo,
 						 MimeInfo      **mimeinfo);
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 GHashTable *procmsg_msg_hash_table_create	(GSList		*mlist);
 void procmsg_msg_hash_table_append		(GHashTable	*msg_table,
 						 GSList		*mlist);
@@ -351,5 +355,9 @@ void	 procmsg_msginfo_free		(MsgInfo	*msginfo);
 
 gint procmsg_cmp_msgnum_for_sort	(gconstpointer	 a,
 					 gconstpointer	 b);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __PROCMSG_H__ */
