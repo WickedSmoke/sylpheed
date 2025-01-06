@@ -209,6 +209,10 @@ typedef void (*LogFlushFunc)		(void);
 #define Str(x)	#x
 #define Xstr(x)	Str(x)
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void list_free_strings		(GList		*list);
 void slist_free_strings		(GSList		*list);
 
@@ -597,5 +601,9 @@ void log_warning	(const gchar *format, ...) G_GNUC_PRINTF(1, 2);
 void log_error		(const gchar *format, ...) G_GNUC_PRINTF(1, 2);
 
 void log_flush		(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __UTILS_H__ */

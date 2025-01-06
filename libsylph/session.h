@@ -189,6 +189,10 @@ struct _Session
 	gpointer send_data_notify_data;
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void session_init		(Session	*session);
 gint session_connect		(Session	*session,
 				 const gchar	*server,
@@ -244,5 +248,9 @@ gint session_recv_data	(Session	*session,
 gint session_recv_data_as_file	(Session	*session,
 				 guint		 size,
 				 const gchar	*terminator);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __SESSION_H__ */
