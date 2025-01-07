@@ -336,7 +336,7 @@ gboolean session_is_connected(Session *session)
 		session->state == SESSION_RECV);
 }
 
-SessionErrorValue session_get_error(Session *session)
+SessionErrorValue session_get_error(const Session *session)
 {
 	SessionPrivData *priv;
 

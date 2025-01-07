@@ -205,7 +205,7 @@ gint session_disconnect		(Session	*session);
 void session_destroy		(Session	*session);
 gboolean session_is_connected	(Session	*session);
 
-SessionErrorValue session_get_error	(Session	*session);
+SessionErrorValue session_get_error	(const Session	*session);
 
 void session_set_access_time	(Session	*session);
 
